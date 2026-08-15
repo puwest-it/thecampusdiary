@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Campus Diary — coming soon(ish)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --paper: #FBF3DF;
+    --paper-edge: #F1E4C4;
+    --line-blue: #B9CFE0;
+    --margin-red: #E8A6A6;
+    --ink: #2B2B3D;
+    --ink-soft: #4A4A5E;
+    --tape-yellow: #FFD23F;
+    --tape-orange: #FF7A3D;
+    --highlight: #FFE9A8;
+    --pencil: #6B6B7B;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100%;
+    background:
+      radial-gradient(circle at 15% 10%, #F6E9C9, #E9D6A3 140%);
+    font-family:'Patrick Hand', cursive;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body{
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 16px 80px;
+  }
+
+  /* ---------- caution banner ---------- */
+  .caution-wrap{
+    position:fixed;
+    top:38px;
+    left:-10%;
+    width:120%;
+    transform:rotate(-3deg);
+    background:repeating-linear-gradient(45deg,var(--tape-yellow) 0 26px, var(--ink) 26px 52px);
+    box-shadow:0 6px 14px rgba(0,0,0,.25);
+    z-index:50;
+    overflow:hidden;
+    border-top:2px solid rgba(0,0,0,.2);
+    border-bottom:2px solid rgba(0,0,0,.2);
+  }
+  .caution-wrap span.track{
+    display:inline-block;
+    white-space:nowrap;
+    font-family:'Courier Prime', monospace;
+    font-weight:700;
+    letter-spacing:3px;
+    color:#1a1a1a;
+    padding:6px 0;
+    font-size:14px;
+    animation: scroll-tape 18s linear infinite;
+  }
+  @keyframes scroll-tape{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ---------- notebook ---------- */
+  .notebook{
+    position:relative;
+    margin-top:70px;
+    width:100%;
+    max-width:820px;
+    background:
+      repeating-linear-gradient(var(--paper) 0 37px, var(--line-blue) 37px 38px),
+      var(--paper);
+    border-radius:6px 14px 14px 6px;
+    box-shadow: 12px 18px 0 var(--paper-edge), 12px 18px 30px rgba(70,50,20,.35);
+    padding:56px 44px 48px 90px;
+    transform:rotate(-0.4deg);
+  }
+
+  /* margin rule */
+  .notebook::before{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:64px;
+    width:2px;
+    background:var(--margin-red);
+    opacity:.55;
+  }
+
+  /* spiral binding */
+  .spiral{
+    position:absolute;
+    left:-18px; top:26px; bottom:26px;
+    width:36px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .spiral i{
+    display:block;
+    width:36px; height:14px;
+    border:4px solid #9c9c9c;
+    border-bottom:none;
+    border-radius:50% 50% 0 0 / 100% 100% 0 0;
+    background:transparent;
+    box-shadow: inset 0 2px 2px rgba(0,0,0,.15);
+    transform:rotate(90deg);
+  }
+
+  /* coffee ring */
+  .coffee-ring{
+    position:absolute;
+    right:46px; top:34px;
+    width:96px; height:96px;
+    border:9px solid rgba(120,72,25,.28);
+    border-radius:50%;
+    filter:blur(.3px);
+  }
+  .coffee-ring::after{
+    content:"";
+    position:absolute; inset:-9px;
+    border:2px solid rgba(120,72,25,.14);
+    border-radius:50%;
+  }
+
+  /* torn washi tape holding a sign */
+  .tape{
+    position:absolute;
+    background:rgba(255,122,61,.82);
+    box-shadow:0 3px 6px rgba(0,0,0,.15);
+    height:34px;
+  }
+  .tape.left{ width:110px; left:20px; top:-14px; transform:rotate(-8deg); }
+  .tape.right{ width:110px; right:150px; top:-14px; transform:rotate(7deg); }
+
+  header.title-block{
+    position:relative;
+    margin-bottom:26px;
+  }
+  .eyebrow{
+    font-family:'Courier Prime', monospace;
+    font-size:13px;
+    letter-spacing:2px;
+    color:var(--ink-soft);
+    text-decoration:underline wavy var(--margin-red);
+    text-underline-offset:5px;
+  }
+  h1{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:clamp(48px, 8vw, 78px);
+    line-height:.95;
+    margin:6px 0 2px;
+    color:var(--ink);
+  }
+  h1 .doodle-underline{
+    display:block;
+    width:min(430px, 90%);
+    height:14px;
+    margin-top:-6px;
+  }
+  .subtitle{
+    font-size:20px;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+  .subtitle mark{
+    background:var(--highlight);
+    padding:0 4px;
+    border-radius:3px;
+  }
+
+  /* ---------- diary entry ---------- */
+  .entry{
+    margin:30px 0 8px;
+    font-size:19px;
+    line-height:1.75;
+    max-width:60ch;
+  }
+  .entry .date{
+    font-family:'Courier Prime', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:6px;
+  }
+  .strike{ text-decoration:line-through; text-decoration-color:var(--tape-orange); text-decoration-thickness:2px; opacity:.55; }
+  .cursor{
+    display:inline-block;
+    width:9px; height:1em;
+    background:var(--ink);
+    margin-left:2px;
+    vertical-align:text-bottom;
+    animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{opacity:0;} }
+
+  /* ---------- mascot + speech ---------- */
+  .mascot-row{
+    display:flex;
+    align-items:flex-end;
+    gap:18px;
+    margin:34px 0 18px;
+    flex-wrap:wrap;
+  }
+  .mascot-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:0;
+    line-height:0;
+  }
+  .mascot-btn svg{ width:110px; height:auto; overflow:visible; }
+  .hammer-group{
+    transform-origin:78px 40px;
+    animation:hammer-swing 1.6s ease-in-out infinite;
+  }
+  @keyframes hammer-swing{
+    0%,100%{ transform:rotate(0deg); }
+    50%{ transform:rotate(-32deg); }
+  }
+  .mascot-btn:active .hammer-group{ animation-duration:.25s; }
+
+  .speech{
+    position:relative;
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:14px;
+    padding:10px 16px;
+    font-size:17px;
+    max-width:280px;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  .speech::after{
+    content:"";
+    position:absolute;
+    left:-14px; bottom:14px;
+    border:8px solid transparent;
+    border-right-color:var(--ink);
+  }
+  .speech::before{
+    content:"";
+    position:absolute;
+    left:-11px; bottom:15px;
+    border:7px solid transparent;
+    border-right-color:#fff;
+    z-index:1;
+  }
+  .bonk-count{
+    font-family:'Courier Prime', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+
+  /* ---------- checklist ---------- */
+  .checklist{
+    list-style:none;
+    padding:0;
+    margin:26px 0;
+    font-size:18px;
+    max-width:56ch;
+  }
+  .checklist li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:9px 0;
+  }
+  .box{
+    flex:none;
+    width:20px; height:20px;
+    margin-top:4px;
+    border:2.5px solid var(--ink);
+    border-radius:3px;
+    position:relative;
+    transform:rotate(-1deg);
+  }
+  .checklist li.done .box::after{
+    content:"";
+    position:absolute;
+    left:2px; top:5px;
+    width:14px; height:8px;
+    border-left:3px solid var(--tape-orange);
+    border-bottom:3px solid var(--tape-orange);
+    transform:rotate(-45deg);
+  }
+  .checklist li.done span.label{ text-decoration:line-through; color:var(--ink-soft); }
+
+  /* progress bar drawn like a pencil track */
+  .progress-wrap{
+    margin:30px 0 10px;
+    max-width:56ch;
+  }
+  .progress-label{
+    font-family:'Courier Prime', monospace;
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+    color:var(--ink-soft);
+  }
+  .progress-track{
+    height:16px;
+    border:2.5px solid var(--ink);
+    border-radius:10px;
+    background:#fff;
+    overflow:hidden;
+    position:relative;
+  }
+  .progress-fill{
+    height:100%;
+    width:37%;
+    background:repeating-linear-gradient(120deg, var(--tape-orange) 0 12px, var(--tape-yellow) 12px 24px);
+    border-radius:10px 0 0 10px;
+    animation:fillstripe 1.2s linear infinite;
+    background-size:34px 100%;
+  }
+  @keyframes fillstripe{ from{background-position:0 0;} to{background-position:34px 0;} }
+
+  /* ---------- mailbox note ---------- */
+  .mailbox{
+    margin-top:38px;
+    padding:18px 20px;
+    border:2px dashed var(--ink-soft);
+    border-radius:10px;
+    max-width:56ch;
+    background:rgba(255,255,255,.35);
+  }
+  .mailbox p{ margin:0 0 12px; font-size:18px; }
+  .mailbox form{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .mailbox input[type="email"]{
+    flex:1 1 220px;
+    font-family:'Patrick Hand', cursive;
+    font-size:17px;
+    padding:10px 12px;
+    border:2px solid var(--ink);
+    border-radius:8px;
+    background:#fff;
+  }
+  .mailbox input[type="email"]:focus-visible,
+  .mascot-btn:focus-visible{
+    outline:3px solid var(--tape-orange);
+    outline-offset:2px;
+  }
+  .mailbox button{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:20px;
+    padding:8px 22px;
+    border:2px solid var(--ink);
+    border-radius:8px;
+    background:var(--tape-yellow);
+    cursor:pointer;
+    box-shadow:2px 2px 0 var(--ink);
+    transition:transform .1s ease;
+  }
+  .mailbox button:hover{ transform:translate(-1px,-1px); }
+  .mailbox button:active{ transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); }
+  .mailbox .thanks{
+    font-family:'Courier Prime', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:8px;
+    display:none;
+  }
+  .mailbox.sent .thanks{ display:block; }
+  .mailbox.sent form{ opacity:.5; pointer-events:none; }
+
+  footer.joke{
+    margin-top:34px;
+    font-size:15px;
+    color:var(--ink-soft);
+    font-family:'Courier Prime', monospace;
+  }
+
+  @media (max-width:600px){
+    .notebook{ padding:50px 22px 40px 58px; }
+    .notebook::before{ left:34px; }
+    .spiral{ left:-12px; }
+    .coffee-ring{ display:none; }
+    .tape.right{ right:20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; }
+    .caution-wrap span.track{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="caution-wrap" aria-hidden="true">
+  <span class="track">UNDER CONSTRUCTION · WATCH FOR FALLING DEADLINES · UNDER CONSTRUCTION · WATCH FOR FALLING DEADLINES · &nbsp;</span>
+</div>
+
+<main class="notebook">
+  <div class="spiral" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <div class="coffee-ring" aria-hidden="true"></div>
+  <div class="tape left" aria-hidden="true"></div>
+  <div class="tape right" aria-hidden="true"></div>
+
+  <header class="title-block">
+    <p class="eyebrow">PAGE 1 OF ??? · DO NOT LOSE THIS NOTEBOOK</p>
+    <h1>the campus diary
+      <svg class="doodle-underline" viewBox="0 0 430 14" aria-hidden="true">
+        <path d="M2 8 C 80 2, 160 12, 240 6 S 380 2, 428 8" fill="none" stroke="#FF7A3D" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </h1>
+    <p class="subtitle">campus news, headlines, and the stuff the group chat gets wrong first.
+      Right now it's <mark>still in the notebook stage</mark> — bear with us.</p>
+  </header>
+
+  <section class="entry">
+    <span class="date">Newsroom log, 11:58pm —</span>
+    Breaking: <span class="strike">the website launched today</span>
+    the editors opened their laptops, drafted a headline, then spent an hour
+    arguing about the font instead. Progress was made. Some of it was even on the site<span class="cursor"></span>
+  </section>
+
+  <ul class="checklist">
+    <li class="done"><span class="box"></span><span class="label">Name the paper something cooler than "Untitled Project"</span></li>
+    <li class="done"><span class="box"></span><span class="label">Convince the editor doodling counts as layout design</span></li>
+    <li><span class="box"></span><span class="label">Actually publish the front page</span></li>
+    <li><span class="box"></span><span class="label">Stop renaming the "Breaking News" button</span></li>
+    <li><span class="box"></span><span class="label">Ask the cafeteria for their renovation timeline for tips</span></li>
+  </ul>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>BUILD PROGRESS</span><span>95% · one coffee at a time</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:95%"></div></div>
+  </div>
+
+  <div class="mascot-row">
+    <button class="mascot-btn" id="mascotBtn" aria-label="Poke the site mascot">
+      <svg viewBox="0 0 140 130" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="70" cy="118" rx="34" ry="7" fill="#000" opacity=".12"/>
+        <rect x="40" y="70" width="30" height="38" rx="8" fill="#FF7A3D"/>
+        <circle cx="55" cy="52" r="20" fill="#F6CBA0"/>
+        <path d="M35 46 a20 16 0 0 1 40 0 z" fill="#2B2B3D"/>
+        <rect x="30" y="34" width="50" height="12" rx="4" fill="#FFD23F" stroke="#2B2B3D" stroke-width="2"/>
+        <circle cx="48" cy="53" r="2.4" fill="#2B2B3D"/>
+        <circle cx="62" cy="53" r="2.4" fill="#2B2B3D"/>
+        <path d="M46 62 q9 6 18 0" stroke="#2B2B3D" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <g class="hammer-group">
+          <rect x="74" y="36" width="8" height="46" rx="3" fill="#8a5a2b"/>
+          <rect x="66" y="24" width="26" height="16" rx="4" fill="#6B6B7B" stroke="#2B2B3D" stroke-width="2"/>
+        </g>
+      </svg>
+    </button>
+    <div>
+      <div class="speech" id="speechBubble">still hammering out the details.</div>
+      <div class="bonk-count" id="bonkCount">bonks logged: 0</div>
+    </div>
+  </div>
+
+  <div class="mailbox" id="mailbox">
+    <p>Leave your email in the tip line and we'll send the scoop the day this thing actually launches:</p>
+    <form id="mailboxForm">
+      <input type="email" required placeholder="n.s.al.jabir@gmail.com" aria-label="Email address">
+      <button type="submit">Slip it under the door</button>
+    </form>
+    <p class="thanks">✓ noted, tucked between two textbooks for safekeeping.</p>
+  </div>
+
+  <footer class="joke">P.S. — this page has been "almost done" longer than the campus cafeteria renovation. We remain optimistic.</footer>
+</main>
+
+<script>
+  const lines = [
+    "still hammering out the headline.",
+    "ow. that one hurt.",
+    "breaking news: this hurts.",
+    "professionally procrastinating.",
+    "the pencil is mightier, honestly.",
+    "site status: developing story."
+  ];
+  let bonks = 0;
+  const bubble = document.getElementById('speechBubble');
+  const counter = document.getElementById('bonkCount');
+  document.getElementById('mascotBtn').addEventListener('click', () => {
+    bonks++;
+    counter.textContent = 'bonks logged: ' + bonks;
+    bubble.textContent = lines[Math.floor(Math.random() * lines.length)];
+  });
+
+  document.getElementById('mailboxForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('mailbox').classList.add('sent');
+  });
+</script>
+
+</body>
+</html>
